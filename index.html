@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DVD Bouncing Screen</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background-color: white;
+    }
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="dvdCanvas"></canvas>
+  <script>
+    const canvas = document.getElementById("dvdCanvas");
+    const ctx = canvas.getContext("2d");
+
+    // Resize the canvas to fit the window
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const dvdLogo = new Image();
+    dvdLogo.src = "https://upload.wikimedia.org/wikipedia/commons/9/9b/DVD_logo.svg";
+
+    const logoWidth = 100;
+    const logoHeight = 60;
+
+    let x = Math.random() * (canvas.width - logoWidth);
+    let y = Math.random() * (canvas.height - logoHeight);
+    let dx = 2; // Horizontal velocity
+    let dy = 2; // Vertical velocity
+
+    let r = Math.random() * 255;
+    let g = Math.random() * 255;
+    let b = Math.random() * 255;
+
+    function changeColor() {
+      r = Math.random() * 255;
+      g = Math.random() * 255;
+      b = Math.random() * 255;
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+
+      // Draw the DVD logo
+      ctx.drawImage(dvdLogo, x, y, logoWidth, logoHeight);
+
+      // Bounce off the walls
+      if (x + logoWidth >= canvas.width || x <= 0) {
+        dx = -dx;
+        changeColor();
+      }
+      if (y + logoHeight >= canvas.height || y <= 0) {
+        dy = -dy;
+        changeColor();
+      }
+
+      x += dx;
+      y += dy;
+
+      requestAnimationFrame(animate);
+    }
+
+    dvdLogo.onload = () => {
+      animate();
+    };
+
+    // Adjust canvas size on window resize
+    window.addEventListener("resize", () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  </script>
+</body>
+</html>
